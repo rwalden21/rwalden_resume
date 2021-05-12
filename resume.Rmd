@@ -1,0 +1,174 @@
+---
+title: rwalden_resume
+author: Richard Walden
+date: "`r Sys.Date()`"
+output:
+  pagedown::html_resume:
+    css: ['css/custom_resume.css', 'css/styles_html.css', 'resume']
+    # css: ['css/custom_resume.css', 'css/styles_pdf.css', 'resume']
+    # set it to true for a self-contained HTML page but it'll take longer to render
+    self_contained: true
+params:
+  doctype: "HTML" # "PDF" or "HTML" is automatically updated in update_resume.R 
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  results='asis', 
+  echo = FALSE
+)
+
+#load packages
+library(glue)
+
+#source helper functions
+source('helper_functions.R')
+
+
+# get data from xlsx file
+# position_data <- readxl::read_excel('resume_data.xlsx',
+#                                     sheet = "positions",
+#                                     na = c("", "NA", "na"))
+# 
+# skill_data <- readxl::read_excel('resume_data.xlsx',
+#                                  sheet = "skills",
+#                                  na = c("", "NA", "na"))
+
+position_data <- read.csv('./data/position_data_1.csv', stringsAsFactors = F)
+skill_data <- read.csv('./data/skill_data_1.csv', stringsAsFactors = F)
+```
+
+
+Aside
+================================================================================
+
+
+Contact {#contact}
+--------------------------------------------------------------------------------
+
+```{r contactinfo}
+
+# Adjust contact info based on document type - html has link while pdf does not
+if(params$doctype == "HTML") {
+  glue::glue('
+    - <i class="fa fa-map-marked-alt"></i> Las Cruces, New Mexico
+    - <i class="fa fa-phone"></i> <a href="tel:+18322447278">(832) 244-7278</a>
+    - <i class="fa fa-envelope"></i> rwalden21@gmail.com.com
+    - <i class="fab fa-linkedin-in"></i> [linkedin.com/rwalden](https://www.linkedin.com/in/richard-walden-925291182/)
+  ')
+} 
+
+if(params$doctype == "PDF") {
+  glue::glue('
+    - <i class="fa fa-map-marked-alt"></i> Las Cruces, New Mexico
+    - <i class="fa fa-phone"></i> 832.244.7278
+    - <i class="fa fa-envelope"></i> rwalden21<!-- breaking hyplerlink -->@gmail.com
+
+    - <i class="fab fa-linkedin-in"></i> linkedin.com/rwalden
+  ')
+}
+
+```
+
+
+
+```{r download}
+# if doctype is html add link to download a pdf version
+if(params$doctype == "HTML"){
+  cat("[<i class='fas fa-download'></i> Download as a PDF](https://github.com/mleary/resume/raw/main/mleary_resume.pdf)")
+}
+
+```
+
+<br>
+
+
+Tech skills {#skills}
+--------------------------------------------------------------------------------
+
+```{r codingskills, dev.args = list(bg = 'transparent')}
+
+# function from helper_functions.R
+build_skill_bars(skill_data, "Tech")
+
+```
+
+R skills {#rpackages}
+--------------------------------------------------------------------------------
+
+```{r rskills, dev.args = list(bg = 'transparent')}
+
+# function from helper_functions.R
+build_skill_bars(skill_data, "R Packages")
+
+```
+
+Learning Focus {#interests}
+--------------------------------------------------------------------------------
+
+```{r learningfocus, dev.args = list(bg = 'transparent')}
+
+# function from helper_functions.R
+build_skill_bars(skill_data, "Interests")
+
+```
+
+
+Disclaimer {#disclaimer}
+--------------------------------------------------------------------------------
+
+
+```{r}
+
+# set disclaimer in bottom right corner based on doctype
+if(params$doctype == "HTML") {
+  glue::glue("
+    Made w/ [**pagedown**](https://github.com/rstudio/pagedown).   
+    Source code: [**Github repo**](https://github.com/mleary/resume).
+  ")
+} 
+if(params$doctype == "PDF") {
+  glue::glue("
+    Made w/ **pagedown::html_resume**
+    Code: **github.com/mleary/resume** 
+  ")
+}
+```
+
+
+Last updated on `r Sys.Date()`.
+<br>
+<br>
+
+
+Main
+================================================================================
+
+
+Richard Walden {#title}
+--------------------------------------------------------------------------------
+
+### Data Scientist  |  Operations Researcher  |  Mathematician | Veteran
+
+I enjoy working with data to find and deliver insights, solve business problems, and build tools that help people work more efficiently. I moved into data science after 10+ years working in public policy and public relations.
+
+
+
+Education {data-icon=graduation-cap data-concise=true}
+--------------------------------------------------------------------------------
+
+```{r education}
+print_section(position_data, 'education')
+```
+
+
+
+Professional Experience {data-icon=suitcase}
+--------------------------------------------------------------------------------
+
+```{r jobs}
+print_section(position_data, 'work')
+```
+
+
